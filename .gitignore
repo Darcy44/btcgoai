@@ -1,0 +1,14 @@
+# Executaveis compilados
+*.exe
+
+# Arquivos temporarios
+*.tmp
+*.log
+*.out
+
+# Copias de seguranca
+*.bak
+README_backup.md
+
+# Arquivo temporario acidental
+/dir

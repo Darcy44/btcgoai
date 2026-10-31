@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 )
 
 // loadWalletAddresses loads wallet addresses from data/wallets.json
@@ -24,12 +25,10 @@ func loadWalletAddresses() ([]string, error) {
 	return walletData.Wallets, nil
 }
 
-// loadRanges loads ranges from data/ranges.json
-// loadWalletHash160s loads wallet hash160 values from data/hash160s.json
+// loadWalletHash160s loads wallet HASH160 values from data/hash160s.json
 func loadWalletHash160s() ([][]byte, error) {
 	file, err := os.Open("data/hash160s.json")
 	if err != nil {
-		// If the dedicated hash160s file doesn't exist, try converting from addresses
 		return convertAddressesToHash160()
 	}
 	defer file.Close()
@@ -40,33 +39,41 @@ func loadWalletHash160s() ([][]byte, error) {
 		return nil, err
 	}
 
-	// Convert hex strings to byte slices
 	result := make([][]byte, len(hash160Data.Hash160s))
 	for i, hexStr := range hash160Data.Hash160s {
-		hash160Bytes, err := hex.DecodeString(hexStr)
+		hash160Bytes, err := hex.DecodeString(strings.TrimSpace(hexStr))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf(
+				"HASH160 inválido na posição %d: %w", i+1, err,
+			)
 		}
+
+		if len(hash160Bytes) != 20 {
+			return nil, fmt.Errorf(
+				"HASH160 na posição %d tem %d bytes; esperado: 20",
+				i+1, len(hash160Bytes),
+			)
+		}
+
 		result[i] = hash160Bytes
 	}
 
 	return result, nil
 }
 
-// convertAddressesToHash160 is a fallback function that loads wallet addresses and
-// converts them to hash160 values
+// convertAddressesToHash160 is a fallback function that loads wallet addresses.
 func convertAddressesToHash160() ([][]byte, error) {
 	_, err := loadWalletAddresses()
 	if err != nil {
 		return nil, err
 	}
 
-	// This is a stub implementation that should be replaced with actual conversion logic
-	// In a real implementation, you would use btcutil to convert each address to hash160
-	// For now, we'll just return an error to indicate this isn't implemented
-	return nil, fmt.Errorf("conversion from addresses to hash160 not implemented, please create data/hash160s.json")
+	return nil, fmt.Errorf(
+		"conversão de endereços para HASH160 ainda não implementada; crie data/hash160s.json",
+	)
 }
 
+// loadRanges loads ranges from data/ranges.json
 func loadRanges() ([]Range, error) {
 	file, err := os.Open("data/ranges.json")
 	if err != nil {

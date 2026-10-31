@@ -1,43 +1,103 @@
-# Bitcoin Private Key Finder
+# BTCGoAI — Laboratório Educacional de Criptografia Bitcoin
 
-This Go program searches for Bitcoin private keys within a specified range that correspond to a targeted Bitcoin address.
+## 1. Apresentação
 
-## Description
+BTCGoAI é um projeto desenvolvido em Go para estudos de estruturas de dados, operações criptográficas e validação de informações relacionadas ao formato de endereços Bitcoin.
 
-The program works as follows:
-1. It prompts the user to enter a wallet number (1-160)
-2. It loads the corresponding range from `ranges.json` for that wallet number
-3. It then iterates through private keys in that range, converting each to a Bitcoin address
-4. It compares each generated address with the target wallet address from `wallets.json`
-5. If a match is found, it displays the private key
+O projeto contém rotinas de conversão e validação HASH160, estruturas para leitura de arquivos JSON e testes automatizados com dados de exemplo.
 
-## Prerequisites
+Este repositório deve ser utilizado como ambiente educacional, com dados fictícios e testes controlados.
 
-- Go 1.18 or higher
+## 2. Estrutura do projeto
 
-## Usage
+```text
+btcgoai/
+├── data/
+│   ├── hash160s.json
+│   ├── ranges.json
+│   └── wallets.json
+├── bitcoin.go
+├── colors.go
+├── data.go
+├── main.go
+├── models.go
+├── range_validation.go
+├── range_validation_test.go
+├── search.go
+├── search_test.go
+├── data_validation_test.go
+├── bench_test.go
+├── go.mod
+├── go.sum
+└── README.md
+```
 
-1. Make sure the `wallets.json` and `ranges.json` files are in the same directory as the executable
-2. Run the program:
-   ```
-   ./bitcoin_finder.exe
-   ```
-3. Enter a wallet number between 1 and 160 when prompted
-4. The program will start searching for matching private keys
+## 3. Requisitos
 
-## Compilation
+- Go 1.21 ou superior.
+- Windows, Linux ou macOS.
+- Arquivos JSON de exemplo na pasta `data`.
 
-1. Ensure you have Go 1.18 or higher installed on your system
-2. Clone this repository or download the source code
-3. Navigate to the project directory
-4. Build the executable:
-   ```
-   go build -o bitcoin_finder.exe
-   ```
-5. The compiled executable will be created in the same directory
+## 4. Organização dos dados
 
-## Notes
+Os arquivos JSON utilizados pelo projeto são:
 
-- Large ranges may take significant time to process
-- The program includes a built-in limit to prevent infinite searches
-- Only active ranges (status=1) will be processed
+- `data/wallets.json`: contém os endereços armazenados.
+- `data/hash160s.json`: contém valores HASH160 em formato hexadecimal.
+- `data/ranges.json`: contém os limites e o campo de status das faixas.
+
+O carregamento dos arquivos é realizado pelas funções existentes em `data.go`.
+
+Os valores HASH160 são decodificados e validados para garantir o comprimento esperado de 20 bytes.
+
+## 5. Validação de limites
+
+O arquivo `range_validation.go` contém a função `parseRangeLimits`, responsável por validar limites hexadecimais.
+
+As verificações incluem:
+
+- Remoção de espaços desnecessários.
+- Aceitação dos prefixos `0x` e `0X`.
+- Rejeição de valores hexadecimais inválidos.
+- Rejeição de valores negativos.
+- Verificação da ordem dos limites.
+
+## 6. Testes automatizados
+
+Para executar os testes do projeto, utilize:
+
+```bash
+go test -count=1 ./...
+```
+
+Os testes verificam diferentes aspectos das rotinas implementadas, incluindo validações e cálculos criptográficos com valores de teste.
+
+## 7. Limitações conhecidas
+
+- A conversão de endereços para HASH160 na função `convertAddressesToHash160` ainda não está implementada.
+- O campo `Status` existe na estrutura `Range`, mas seu uso como filtro não foi confirmado na implementação examinada.
+- A documentação e os testes devem ser atualizados sempre que novas funcionalidades forem implementadas.
+
+## 8. Segurança e uso responsável
+
+Este projeto é destinado ao aprendizado de programação e criptografia.
+
+Utilize exclusivamente dados fictícios, chaves de demonstração e ambientes controlados.
+
+Não utilize o projeto para tentar obter acesso a carteiras de terceiros ou recuperar chaves privadas sem autorização.
+
+Nunca compartilhe chaves privadas ou frases de recuperação.
+
+## 9. Desenvolvimento
+
+Contribuições são bem-vindas, especialmente melhorias em:
+
+- Organização do código.
+- Validação de entradas.
+- Tratamento de erros.
+- Testes automatizados.
+- Documentação técnica.
+
+---
+
+**Projeto BTCGoAI — Estudos de Go e criptografia Bitcoin.**

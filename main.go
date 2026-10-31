@@ -45,7 +45,7 @@ func main() {
 		return
 	}
 	targetHash160 := walletHash160s[walletIndex]
-	
+
 	// Get the range for the selected wallet
 	if walletIndex >= len(ranges) {
 		fmt.Printf("%sRange index out of range.%s\n", ColorRed, ColorReset)
@@ -57,13 +57,30 @@ func main() {
 	fmt.Printf("%sSelected Wallet Hash160: %s%s%s\n", ColorYellow, ColorBoldYellow, targetHash160Hex, ColorReset)
 	fmt.Printf("%sRange: min=%s%s%s, max=%s%s%s\n", ColorYellow, ColorBoldCyan, selectedRange.Min, ColorReset, ColorBoldCyan, selectedRange.Max, ColorReset)
 
-	// Convert hex strings to big int
-	minKey := new(big.Int)
-	maxKey := new(big.Int)
-	minKey.SetString(selectedRange.Min[2:], 16) // Remove 0x prefix
-	maxKey.SetString(selectedRange.Max[2:], 16) // Remove 0x prefix
+	// Convert and validate hexadecimal range limits.
+	minHex := strings.TrimSpace(selectedRange.Min)
+	maxHex := strings.TrimSpace(selectedRange.Max)
+
+	minHex = strings.TrimPrefix(strings.TrimPrefix(minHex, "0x"), "0X")
+	maxHex = strings.TrimPrefix(strings.TrimPrefix(maxHex, "0x"), "0X")
+
+	minKey, okMin := new(big.Int).SetString(minHex, 16)
+	maxKey, okMax := new(big.Int).SetString(maxHex, 16)
+
+	if !okMin || !okMax {
+		fmt.Printf("%sErro: limite hexadecimal inválido.%s\n", ColorRed, ColorReset)
+		return
+	}
+
+	if minKey.Sign() < 0 || maxKey.Sign() < 0 {
+		fmt.Printf("%sErro: os limites não podem ser negativos.%s\n", ColorRed, ColorReset)
+		return
+	}
+
+	if minKey.Cmp(maxKey) > 0 {
+		fmt.Printf("%sErro: o limite mínimo é maior que o máximo.%s\n", ColorRed, ColorReset)
+		return
+	}
 
 	searchForPrivateKey(minKey, maxKey, targetHash160)
 }
-
-
