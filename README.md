@@ -21,6 +21,7 @@ btcgoai/
 ├── data.go
 ├── main.go
 ├── models.go
+├── models_test.go
 ├── range_validation.go
 ├── range_validation_test.go
 ├── search.go
@@ -70,7 +71,7 @@ Para executar os testes do projeto, utilize:
 go test -count=1 ./...
 ```
 
-Os testes verificam diferentes aspectos das rotinas implementadas, incluindo validações e cálculos criptográficos com valores de teste.
+Os testes verificam diferentes aspectos das rotinas implementadas, incluindo validações, interpretação de estruturas JSON (`WalletData`, `RangeData` e `Hash160Data`) e cálculos criptográficos com valores de teste.
 
 ## 7. Limitações conhecidas
 
