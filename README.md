@@ -19,6 +19,7 @@ btcgoai/
 ├── bitcoin.go
 ├── colors.go
 ├── data.go
+├── data_validation_test.go
 ├── main.go
 ├── models.go
 ├── models_test.go
@@ -26,11 +27,11 @@ btcgoai/
 ├── range_validation_test.go
 ├── search.go
 ├── search_test.go
-├── data_validation_test.go
 ├── bench_test.go
 ├── go.mod
 ├── go.sum
 └── README.md
+
 ```
 
 ## 3. Requisitos
