@@ -25,7 +25,6 @@ func loadWalletAddresses() ([]string, error) {
 	return walletData.Wallets, nil
 }
 
-// loadWalletHash160s loads wallet HASH160 values from data/hash160s.json
 func loadWalletHash160s() ([][]byte, error) {
 	file, err := os.Open("data/hash160s.json")
 	if err != nil {
@@ -35,16 +34,20 @@ func loadWalletHash160s() ([][]byte, error) {
 
 	var hash160Data Hash160Data
 	decoder := json.NewDecoder(file)
+
 	if err := decoder.Decode(&hash160Data); err != nil {
 		return nil, err
 	}
 
 	result := make([][]byte, len(hash160Data.Hash160s))
+
 	for i, hexStr := range hash160Data.Hash160s {
 		hash160Bytes, err := hex.DecodeString(strings.TrimSpace(hexStr))
+
 		if err != nil {
 			return nil, fmt.Errorf(
-				"HASH160 inválido na posição %d: %w", i+1, err,
+				"HASH160 inválido na posição %d: %w",
+				i+1, err,
 			)
 		}
 
