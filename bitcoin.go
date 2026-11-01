@@ -34,7 +34,7 @@ func privateKeyToAddress(privateKeyBytes []byte) (string, error) {
 	return address.EncodeAddress(), nil
 }
 
-// privateKeyToHash160 converts a private key to a rim160 address
+// privateKeyToHash160 converts a private key to a HASH160 value
 func privateKeyToHash160(privateKeyBytes []byte) ([]byte, error) {
 	// Convert private key bytes to btcec private key
 	privateKey, _ := btcec.PrivKeyFromBytes(privateKeyBytes)
